@@ -15,7 +15,7 @@ H5调用Demo
             var options = {
                 pid: 0, param: "", sp_billno: "@BalanceHelper.GenOrderId()", desc: "这是一个测试支付"
             };
-            $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", 1, options, function () {
+            $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", options, function () {
                 return 1;
             }, function () {
                 alert("支付成功success");
