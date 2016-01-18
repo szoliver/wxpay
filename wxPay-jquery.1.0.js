@@ -8,9 +8,9 @@
             'cancel': function () { alert('cancel:' + errdesc); }
         };
         var settings = $.extend({}, defaults, options);
-        var IsSupportWxPay = function () { return (typeof WeixinJSBridge == "undefined"); }
+        var IsSupportWxPay = function () { return !(typeof WeixinJSBridge == "undefined"); }
         var fee = parseFloat(payfee);
-        if (!IsSupportWxPay)
+        if (!IsSupportWxPay())
             alert("此浏览器不支持微信支付，请进入微信支付！");
         else {
             if (openid == undefined || openid == '')
