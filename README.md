@@ -12,9 +12,11 @@ H5调用Demo
     <script src="~/Content/js/wxPay-jquery.js"></script>
     <script>
         $(function () {
-            $("a.pay").wxPay("/usercenter/payment", "oGdiZu******SSoE", 1, 0, "", "这是一个测试支付", function () {
-                //支付前干点啥
-                return 2;
+            var options = {
+                pid: 0, param: "", sp_billno: "@BalanceHelper.GenOrderId()", desc: "这是一个测试支付"
+            };
+            $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", 1, options, function () {
+                return 1;
             }, function () {
                 alert("支付成功success");
             }
