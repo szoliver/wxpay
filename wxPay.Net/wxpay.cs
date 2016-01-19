@@ -16,7 +16,7 @@ namespace wxPay.Net
             get { return WxPayV3.TenpayV3Info; }
             set { WxPayV3.TenpayV3Info = value; }
         }
-        
+
 
         /// <summary>
         /// 签名后执行的委托方法，用于在签名成功的时机有机会处理订单操作
@@ -30,7 +30,9 @@ namespace wxPay.Net
         /// <param name="sp_billno">订单号码</param>
         //public delegate void PayOrder(WXPayModel wm, string openid, string tfee, string body, string pid, string param, string sp_billno);
         public delegate void PayOrder(WXPayModel wm);
-        
+        public delegate void NotifySuccess(NotyfyResult e);
+        public delegate void NotifyFail(NotyfyResult e);
+
         /// <summary>
         /// 获取微信支付签名信息
         /// 调用前请先配置wxPayV3Info属性，否则会支付失败,如果paySign = "ERROR"，请查看package内容信息
@@ -48,7 +50,7 @@ namespace wxPay.Net
         public static WXPayModel GetWXPayInfo(PayOrder payorder, string openid, string tfee, string body, string pid, string param, string sp_billno)
         {
             try
-            {                
+            {
                 string timeStamp = "";
                 string nonceStr = "";
                 string package = "";
@@ -109,10 +111,82 @@ namespace wxPay.Net
                 return wm;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return new WXPayModel() { paySign = "ERROR", package = "抛出异常:"+ ex.Message};
+                return new WXPayModel() { paySign = "ERROR", package = "抛出异常:" + ex.Message };
             }
+        }
+
+        /// <summary>
+        /// 回调处理
+        /// </summary>
+        /// <param name="wxKey">微信支付授权KEY</param>
+        /// <param name="success"></param>
+        /// <param name="fail"></param>
+        /// <returns></returns>
+        public static string ProcessNotify(string wxKey, NotifySuccess success, NotifyFail fail)
+        {
+            NotyfyResult result = new NotyfyResult();
+            ResponseHandler resHandler = new ResponseHandler(null);
+            try
+            {
+                result.Content = resHandler.ParseXML();
+                string openid = resHandler.GetParameter("openid");
+                string out_trade_no = resHandler.GetParameter("out_trade_no");
+                string transaction_id = resHandler.GetParameter("transaction_id");
+                string total_fee = resHandler.GetParameter("total_fee");
+                result = new NotyfyResult()
+                {
+                    Content = resHandler.ParseXML(),
+                    out_trade_no = out_trade_no,
+                    openid = openid,
+                    transaction_id = transaction_id,
+                    total_fee = total_fee,
+                    appid = resHandler.GetParameter("appid"),
+                    fee_type = resHandler.GetParameter("fee_type"),
+                    is_subscribe = resHandler.GetParameter("is_subscribe"),
+                    mch_id = resHandler.GetParameter("mch_id"),
+                    result_code = resHandler.GetParameter("result_code"),
+                    time_end = resHandler.GetParameter("time_end"),
+                };
+                resHandler.SetKey(wxKey);
+                bool signResult = resHandler.IsTenpaySign();
+                if (signResult)
+                {
+                     success(result);
+                     return "success";
+                }
+                else
+                {
+                    fail(result);
+                    return "error";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Content = ex.Message; 
+                fail(result);
+                return "error";
+            }
+
+        }
+
+        public class NotyfyResult
+        {
+            /// <summary>
+            /// 完成的回调返回内容
+            /// </summary>
+            public string Content { set; get; }
+            public string openid { set; get; }
+            public string transaction_id { set; get; }
+            public string total_fee { set; get; }
+            public string appid { set; get; }
+            public string fee_type { set; get; }
+            public string is_subscribe { set; get; }
+            public string mch_id { set; get; }
+            public string out_trade_no { set; get; }
+            public string result_code { set; get; }
+            public string time_end { set; get; }
         }
 
         public class WXPayModel

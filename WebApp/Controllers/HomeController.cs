@@ -35,6 +35,19 @@ namespace WebApp.Controllers
             }, openid, tfee, body, pid, param, sp_billno);
             return JsonConvert.SerializeObject(model);
         }
- 
+
+        public ContentResult Success()
+        {
+            string result = WxPayV3.ProcessNotify("key", delegate(wxPay.Net.WxPayV3.NotyfyResult res)
+            {
+                //TODO:回调成功时处理
+
+            }, delegate(wxPay.Net.WxPayV3.NotyfyResult res)
+            {
+                //TODO:回调失败时处理
+                
+            });
+            return Content(result);
+        }
     }
 }
