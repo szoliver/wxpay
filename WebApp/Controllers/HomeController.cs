@@ -47,6 +47,7 @@ namespace WebApp.Controllers
                 //TODO:回调失败时处理
                 
             });
+            //此处一定要返回，不然微信服务器收不到确认信息
             return Content(result);
         }
     }
