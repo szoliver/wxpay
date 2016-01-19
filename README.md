@@ -4,6 +4,10 @@
 1.VS+C#+Jquery+Senparc.Weixin.MP(不会搞php的)<br />
 2.有Senparc.Weixin.MP了为什么还要开发这个组件？<br />
   实际上Senparc.Weixin封装了JSSDK的大部分功能，包括微信支付，但是作为该组件的最终应用者（End-User），常常会被他的DEMO迷惑，并且实际开发中会遇到各种“坑”，这个组件就是为了帮助开发人员跳坑，并通过最简单的办法调用以便实现微信支付功能，本人就是从坑里跳出来的人，过来人，说出来都是泪，你懂的！
+## NuGet包已经发布
+```nuget
+Install-Package wxPay.Net
+```
 ## 这个组件做什么用的？解决了什么问题？
 1.获取微信支付签名信息<br />
     调用前请先配置wxPayV3Info属性，否则会支付失败,如果paySign = "ERROR"，请查看package内容信息<br />
