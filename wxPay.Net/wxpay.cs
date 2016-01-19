@@ -38,9 +38,11 @@ namespace wxPay.Net
         /// 调用前请先配置wxPayV3Info属性，否则会支付失败,如果paySign = "ERROR"，请查看package内容信息
         /// 目前提供最基本的签名字段，有时间的话可以增加基础以外字段的动态增加，一般情况下，基础的字段也能满足支付需求了
         /// 微信支付步骤：</summary>
-        /// 1.$.post调用GetWXPayInfo()获取WXPayModel数据，其中包含签名数据<param name="payorder"></param>
-        /// 2.wxpay.js调用 WeixinJSBridge.invoke('getBrandWCPayRequest')发起微信支付<param name="openid"></param>
+        /// 1.$.post调用GetWXPayInfo()获取WXPayModel数据，其中包含签名数据
+        /// 2.wxpay.js调用 WeixinJSBridge.invoke('getBrandWCPayRequest')发起微信支付
         /// 3.处理回调，成功后返回success
+        /// <param name="payorder"></param>
+        /// <param name="openid"></param>
         /// <param name="tfee">支付的金额</param>
         /// <param name="body">备注</param>
         /// <param name="pid">产品信息</param>

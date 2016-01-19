@@ -11,6 +11,7 @@
             pid: "123", param: "", sp_billno: "@orderid", desc: "这是一个测试支付"
         };
         $("a.pay").wxPay("/home/payment", "@openid", options, function () {
+            //支付前计算支付金额或写固定金额
             return 1;
         }, function () {
             alert("支付成功success");
