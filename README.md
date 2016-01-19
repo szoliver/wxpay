@@ -13,7 +13,7 @@
     b.wxpay.js调用 WeixinJSBridge.invoke('getBrandWCPayRequest')发起微信支付<br />
     c.处理回调，成功后返回success<br />
 ## 源码位置
-  wxPay js源码在[wxPay-jquery.1.0.js](https://github.com/szoliver/wxpay/blob/master/wxPay-jquery.min.js)<br />
+  wxPay js源码在[wxPay-jquery.js](https://github.com/szoliver/wxpay/blob/master/WebApp/Scripts/wxPay-jquery.js)<br />
   wxPay.Net在要目录下<br />
 ## wxPay功能特色
    1.本质上是经验积累，跳过那些坑，可以快速完成微信支付开发（H5公众号）<br />
