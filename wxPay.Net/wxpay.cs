@@ -87,7 +87,8 @@ namespace wxPay.Net
                 var res = XDocument.Parse(result);
                 if (res.Element("xml").Element("prepay_id") == null)
                 {
-                    return new WXPayModel() { paySign = "ERROR", package = result };
+                    string err_code = res.Element("xml").Element("err_code_des").Value;
+                    return new WXPayModel() { paySign = "ERROR", package = err_code };
                 }
                 string prepayId = res.Element("xml").Element("prepay_id").Value;
                 package = string.Format("prepay_id={0}", prepayId);

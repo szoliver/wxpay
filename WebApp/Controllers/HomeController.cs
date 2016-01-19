@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using wxPay.Net;
@@ -11,7 +13,7 @@ namespace WebApp.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index()
-        {
+        {            
             return View();
         }
 
@@ -45,7 +47,7 @@ namespace WebApp.Controllers
             }, delegate(wxPay.Net.WxPayV3.NotyfyResult res)
             {
                 //TODO:回调失败时处理
-                
+
             });
             //此处一定要返回，不然微信服务器收不到确认信息
             return Content(result);

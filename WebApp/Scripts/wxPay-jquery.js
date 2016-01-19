@@ -22,17 +22,23 @@
             alert('OpenID错误');
         else {
             this.click(function () {
-                if (!wx_pay) { return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
+                if (!wx_pay) { alert("微信支付被中断，请稍候再试"); return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
                 var fee = 0;
                 if (typeof (paybefore) == "function") {
                     var rfee = paybefore();
                     if (rfee == null || typeof (rfee) == "undefined") abortpay = true; //中止支付                        
                     if (!isNaN(parseFloat(rfee)))
                         fee = rfee;
+                } else {
+                    if (typeof (fail) == "function") fail("请添加支付前的金额处理并返回正常的金额");
                 }
                 if (!abortpay && fee > 0) {
                     $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: settings.param, sp_billno: settings.sp_billno }, function (datastr) {
                         var data = eval("(" + datastr + ")");
+                        if (data.paySign == "ERROR")
+                        {
+                            if (typeof (fail) == "function") fail(data.package);
+                        }
                         WeixinJSBridge.invoke(
                         'getBrandWCPayRequest', {
                             "appId": data.appId, //公众号名称，由商户传入

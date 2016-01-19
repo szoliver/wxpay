@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Home Page";
-    string orderid=DateTime.Now.Ticks.ToString();
+    string orderid = DateTime.Now.Ticks.ToString();
     string openid = "uO-ZyMILKGWG_5ZXC6*********************";
 }
 
@@ -17,9 +17,9 @@
             alert("支付成功success");
         }, function (e) {
             //如果返回错误，请输入e看是什么内容
-
+            alert(e);
         }, function (e) {
-
+            alert(e);
         }
         );
     });
