@@ -52,7 +52,8 @@
                                 }
                         });
                     });
-                }
+                } else { if (typeof (fail) == "function") fail("金额为0或是被异常中断处理"); }
+
             });
         }
     };
