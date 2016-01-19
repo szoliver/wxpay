@@ -8,7 +8,7 @@
 ```nuget
 Install-Package wxPay.Net
 ```
-或搜索“微信支付”
+或搜索“微信支付”，全称"微信支付快速开发组件"
 ## 这个组件做什么用的？解决了什么问题？
 1.获取微信支付签名信息<br />
     调用前请先配置wxPayV3Info属性，否则会支付失败,如果paySign = "ERROR"，请查看package内容信息<br />
