@@ -114,7 +114,7 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="wxPay.Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\wxPay.Net.1.0.0\lib\wxPay.Net.dll</HintPath>
+      <HintPath>..\packages\wxPay.Net.1.1.0\lib\wxPay.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
