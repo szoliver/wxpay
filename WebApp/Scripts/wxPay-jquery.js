@@ -46,7 +46,7 @@
                                 if (typeof (success) == "function") success();
                             } else
                                 if (res.err_msg == "get_brand_wcpay_request:fail") {
-                                    if (typeof (fail) == "function") fail();
+                                    if (typeof (fail) == "function") fail(res.err_msg);
                                 } else {
                                     if (typeof (cancel) == "function") cancel(res.err_msg);
                                 }
