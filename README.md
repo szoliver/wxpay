@@ -1,4 +1,4 @@
-# wxpay
+# wxpay V1.0
 微信支付-V3 JQuery插件 支持H5页面支付JSSDK
 ## 开发环境支持
 1.VS+C#+Jquery+Senparc.Weixin.MP
@@ -43,3 +43,5 @@
 </body>
 </html>
 ```
+# wxPay的部署方法
+待续...
