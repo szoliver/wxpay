@@ -1,0 +1,1 @@
+﻿为了处理IOS微信软件下的换行bug，暂时添加了一个FixWeixinBugWeixinResult的返回类型暂时替代原来的WeixinResult。微信官方修复bug后此方法将删除。

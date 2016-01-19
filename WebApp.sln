@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{464025BC-976A-4E06-8F74-7F210EAEDBBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wxPay.Net", "wxPay.Net\wxPay.Net.csproj", "{1488CADB-2689-4487-879C-E5EB77C96138}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{464025BC-976A-4E06-8F74-7F210EAEDBBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{464025BC-976A-4E06-8F74-7F210EAEDBBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{464025BC-976A-4E06-8F74-7F210EAEDBBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{464025BC-976A-4E06-8F74-7F210EAEDBBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1488CADB-2689-4487-879C-E5EB77C96138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1488CADB-2689-4487-879C-E5EB77C96138}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1488CADB-2689-4487-879C-E5EB77C96138}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1488CADB-2689-4487-879C-E5EB77C96138}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
