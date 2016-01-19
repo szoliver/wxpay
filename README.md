@@ -12,7 +12,10 @@
     a.$.post调用GetWXPayInfo()获取WXPayModel数据，其中包含签名数据<br />
     b.wxpay.js调用 WeixinJSBridge.invoke('getBrandWCPayRequest')发起微信支付<br />
     c.处理回调，成功后返回success<br />
-##使用wxPay插件H5简单调用微信支付的Demo
+## 源码位置
+  wxPay js源码在[wxPay-jquery.1.0.js](wxpay/WebApp/Scripts/wxPay-jquery.js)
+  wxPay.Net在要目录下
+## 使用wxPay插件H5简单调用微信支付的Demo
 ```html
 <!DOCTYPE html>
 
