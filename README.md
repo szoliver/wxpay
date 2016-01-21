@@ -1,5 +1,6 @@
 # wxpay V1.0
-微信支付-V3 JQuery插件 支持H5页面支付JSSDK
+微信支付-V3 JQuery插件 支持H5页面支付JSSDK<br />
+本组件是基于Senparc.Weixin.MP的应用，人家都已经封装得很好了，就没必要再封装一次，只是为了简化Senparc微信支付的开发应用。
 ## 开发环境支持
 1.VS+C#+Jquery+Senparc.Weixin.MP(不会搞php的)<br />
 2.有Senparc.Weixin.MP了为什么还要开发这个组件？<br />
