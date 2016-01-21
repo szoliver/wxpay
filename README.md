@@ -59,5 +59,91 @@ Install-Package wxPay.Net
 </body>
 </html>
 ```
-# wxPay的部署方法
-待续...
+# wxPay的部署流程（演示代码）
+## [1].引入wxPay.js 
+```html
+<script src="~/Content/js/wxPay-jquery.js"></script>
+```
+## [2].NuGet安装wxApy.Net组件并引用
+ PM> Install-Package wxPay.Net
+ ```c#
+ using wxPay.Net;
+ ```
+## [3].生成后台响应代码及URL
+```C#
+[HttpPost]
+        public string Payment(string openid, string tfee, string body, string pid, string param, string sp_billno)
+        {
+            WxPayV3.wxPayV3Info = new Senparc.Weixin.MP.TenPayLibV3.TenPayV3Info("wx7bed2f983da2d8e4", wxDefine.appsecret, wxDefine.MchId, wxDefine.WxKey, wxDefine.PayNotifyUrl);
+            WxPayV3.WXPayModel model = WxPayV3.GetWXPayInfo(delegate(WxPayV3.WXPayModel wm)
+            {
+                //签名后获得的WXPayModel结果对象，此时可以写入订单
+                //如果paySign为Error，请检查package内容进行调试和查找错误
+                //写入一个临时订单记录，记录订购信息
+                //pid查询产品信息 ，openid 查用户信息
+                //param中的数据格式是券的信息类似于"1:122.00"
+                int ppid = 0;
+                int.TryParse(pid, out ppid);
+                y5_user user = DB.Context.From<y5_user>().Where(k => k.yuWXid == openid).First();
+                y5_suproduct product = DB.Context.From<y5_suproduct>().Where(k => k.id == ppid).First();
+                int oid = BalanceHelper.CreateOrder(user, product, param, sp_billno, tfee, -1);
+
+            }, openid, tfee, body, pid, param, sp_billno);
+            return JsonConvert.SerializeObject(model);
+
+        }
+```
+## [4].JQuery发起签名请求并处理
+```javascript
+$(function () {
+            var options = {
+                pid: 0, param: "", sp_billno: "@BalanceHelper.GenOrderId()", desc: "这是一个测试支付"
+            };
+            $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", options, function () {
+                return 1;
+            }, function () {
+                alert("支付成功success");
+            }
+            );
+        });
+```
+## [5].处理支付通知信息
+public ContentResult NotifyUrl()
+        {
+            string key = wxDefine.WxKey;
+            string result = WxPayV3.ProcessNotify(key, delegate(wxPay.Net.WxPayV3.NotyfyResult res)
+            {
+                LogHelper.Debug("NotifyUrl:" + res.Content, "PAYDATA_wx");
+                //TODO:回调成功时处理
+                decimal tfee = 0;
+                decimal.TryParse(res.total_fee, out tfee);
+                y5_preorder preorder = new y5_preorder()
+                {
+                    addtime = DateTime.Now,
+                    appid = res.appid,
+                    fee_type = res.fee_type,
+                    is_subscribe = res.is_subscribe,
+                    mch_id = res.mch_id,
+                    openid = res.openid,
+                    out_trade_no = res.out_trade_no,
+                    result_code = res.result_code,
+                    time_end = res.time_end,
+                    total_fee = tfee
+                };
+                DB.Context.Insert<y5_preorder>(preorder);
+                string out_trade_no = res.out_trade_no;
+                //修改库存订单信息
+                y5_orderlist order = DB.Context.From<y5_orderlist>().Where(k => k.yoOrderCode == out_trade_no).First();
+                order.yoPayed = tfee;
+                order.yoPayDate = DateTime.Now;
+                order.yoStatus = 0;
+                DB.Context.Update<y5_orderlist>(order);
+
+            }, delegate(wxPay.Net.WxPayV3.NotyfyResult res)
+            {
+                //TODO:回调失败时处理
+
+            });
+            //此处一定要返回，不然微信服务器收不到确认信息
+            return Content(result);
+        }
