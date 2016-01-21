@@ -74,7 +74,7 @@ Install-Package wxPay.Net
 [HttpPost]
         public string Payment(string openid, string tfee, string body, string pid, string param, string sp_billno)
         {
-            WxPayV3.wxPayV3Info = new Senparc.Weixin.MP.TenPayLibV3.TenPayV3Info("wx7bed2f983da2d8e4", wxDefine.appsecret, wxDefine.MchId, wxDefine.WxKey, wxDefine.PayNotifyUrl);
+            WxPayV3.wxPayV3Info = new Senparc.Weixin.MP.TenPayLibV3.TenPayV3Info("wx7******983da2d8e4", wxDefine.appsecret, wxDefine.MchId, wxDefine.WxKey, wxDefine.PayNotifyUrl);
             WxPayV3.WXPayModel model = WxPayV3.GetWXPayInfo(delegate(WxPayV3.WXPayModel wm)
             {
                 //签名后获得的WXPayModel结果对象，此时可以写入订单
