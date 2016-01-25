@@ -46,10 +46,9 @@ namespace wxPay.Net
         /// <param name="tfee">支付的金额</param>
         /// <param name="body">备注</param>
         /// <param name="pid">产品信息</param>
-        /// <param name="param">附加数据</param>
         /// <param name="sp_billno">订单号码</param>
         /// <returns>返回签名数据，Response给JS呼出微信支付控件，返回WXPayModel.paySign=ERROR时报错</returns>
-        public static WXPayModel GetWXPayInfo(PayOrder payorder, string openid, string tfee, string body, string pid, string param, string sp_billno)
+        public static WXPayModel GetWXPayInfo(PayOrder payorder, string openid, string tfee, string body, string pid, string sp_billno)
         {
             try
             {
@@ -87,7 +86,7 @@ namespace wxPay.Net
                 var res = XDocument.Parse(result);
                 if (res.Element("xml").Element("prepay_id") == null)
                 {
-                    string err_code = res.Element("xml").Element("err_code_des").Value;
+                    string err_code = res.Element("xml").Element("return_msg").Value;
                     return new WXPayModel() { paySign = "ERROR", package = err_code };
                 }
                 string prepayId = res.Element("xml").Element("prepay_id").Value;
@@ -156,8 +155,8 @@ namespace wxPay.Net
                 bool signResult = resHandler.IsTenpaySign();
                 if (signResult)
                 {
-                     success(result);
-                     return "success";
+                    success(result);
+                    return "success";
                 }
                 else
                 {
@@ -167,7 +166,7 @@ namespace wxPay.Net
             }
             catch (Exception ex)
             {
-                result.Content = ex.Message; 
+                result.Content = ex.Message;
                 fail(result);
                 return "error";
             }
