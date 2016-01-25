@@ -8,9 +8,10 @@
     //所有工作的目的就是为了以下面简化的方式调用微信支付控件
     $(function () {
         var options = {
-            pid: "123", param: "", sp_billno: "@orderid", desc: "这是一个测试支付"
+            pid: "123", sp_billno: "@orderid", desc: "这是一个测试支付"
         };
         $("a.pay").wxPay("/home/payment", "@openid", options, function () {
+            $.fn.wxPay.OrderParam = "data";
             //支付前计算支付金额或写固定金额
             return 1;
         }, function () {

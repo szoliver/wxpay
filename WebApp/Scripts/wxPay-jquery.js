@@ -3,7 +3,7 @@
     $.fn.wxPay = function (signurl, openid, options, paybefore, success, fail, cancel) {
         var wx_pay = false;
         var defaults = {
-            pid: "0", param: "", sp_billno: "", desc: ""
+            pid: "0", sp_billno: "", desc: ""
         };
         var settings = $.extend({}, defaults, options);
         var abortpay = false;
@@ -21,46 +21,44 @@
         if (typeof (openid) == "undefined" || openid == '')
             alert('OpenID错误');
         else {
-            this.click(function () {
-                if (!wx_pay) { alert("微信支付被中断，请稍候再试"); return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
+            $(this).click(function () {
+                if (!wx_pay) { return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
                 var fee = 0;
                 if (typeof (paybefore) == "function") {
                     var rfee = paybefore();
                     if (rfee == null || typeof (rfee) == "undefined") abortpay = true; //中止支付                        
                     if (!isNaN(parseFloat(rfee)))
-                        fee = rfee;
-                } else {
-                    if (typeof (fail) == "function") fail("请添加支付前的金额处理并返回正常的金额");
+                        fee = rfee * 100; //转换成分
                 }
                 if (!abortpay && fee > 0) {
-                    $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: settings.param, sp_billno: settings.sp_billno }, function (datastr) {
-                        var data = eval("(" + datastr + ")");
-                        if (data.paySign == "ERROR")
-                        {
+                    $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: $.fn.wxPay.OrderParam, sp_billno: settings.sp_billno }, function (data) {
+                        if (data.paySign == "ERROR") {
                             if (typeof (fail) == "function") fail(data.package);
                         }
-                        WeixinJSBridge.invoke(
-                        'getBrandWCPayRequest', {
-                            "appId": data.appId, //公众号名称，由商户传入
-                            "timeStamp": data.timeStamp, //时间戳
-                            "nonceStr": data.nonceStr, //随机串
-                            "package": data.package,//扩展包
-                            "signType": "MD5", //微信签名方式
-                            "paySign": data.paySign //微信签名
-                        }, function (res) {
-                            if (res.err_msg == "get_brand_wcpay_request:ok") {
-                                if (typeof (success) == "function") success();
-                            } else
-                                if (res.err_msg == "get_brand_wcpay_request:fail") {
-                                    if (typeof (fail) == "function") fail(res.err_msg);
-                                } else {
-                                    if (typeof (cancel) == "function") cancel(res.err_msg);
-                                }
-                        });
-                    });
-                } else { if (typeof (fail) == "function") fail("金额为0或是被异常中断处理"); }
-
+                        else {
+                            WeixinJSBridge.invoke(
+                            'getBrandWCPayRequest', {
+                                "appId": data.appId, //公众号名称，由商户传入
+                                "timeStamp": data.timeStamp, //时间戳
+                                "nonceStr": data.nonceStr, //随机串
+                                "package": data.package,//扩展包
+                                "signType": "MD5", //微信签名方式
+                                "paySign": data.paySign //微信签名
+                            }, function (res) {
+                                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                    if (typeof (success) == "function") success();
+                                } else
+                                    if (res.err_msg == "get_brand_wcpay_request:fail") {
+                                        if (typeof (fail) == "function") fail(res.err_desc);
+                                    } else {
+                                        if (typeof (cancel) == "function") cancel(res.err_desc);
+                                    }
+                            });
+                        }
+                    }, "json");
+                }
             });
         }
     };
+    $.fn.wxPay.OrderParam = "";
 })(jQuery, window);
