@@ -114,6 +114,7 @@ $(function () {
         });
 ```
 ## [5].处理支付通知信息
+```c#
 public ContentResult NotifyUrl()
         {
             string key = wxDefine.WxKey;
@@ -144,7 +145,6 @@ public ContentResult NotifyUrl()
                 order.yoPayDate = DateTime.Now;
                 order.yoStatus = 0;
                 DB.Context.Update<y5_orderlist>(order);
-
             }, delegate(wxPay.Net.WxPayV3.NotyfyResult res)
             {
                 //TODO:回调失败时处理
@@ -153,3 +153,4 @@ public ContentResult NotifyUrl()
             //此处一定要返回，不然微信服务器收不到确认信息
             return Content(result);
         }
+```
