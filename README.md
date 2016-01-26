@@ -102,9 +102,10 @@ NuGet程度包管理器：<br />
 ```javascript
 $(function () {
             var options = {
-                pid: 0, param: "", sp_billno: "@BalanceHelper.GenOrderId()", desc: "这是一个测试支付"
+                pid: 0, sp_billno: "@BalanceHelper.GenOrderId()", desc: "这是一个测试支付"
             };
             $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", options, function () {
+                $.fn.wxPay.OrderParam="";
                 return 1;
             }, function () {
                 alert("支付成功success");
