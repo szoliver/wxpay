@@ -93,7 +93,7 @@ NuGet程度包管理器：<br />
                 y5_suproduct product = DB.Context.From<y5_suproduct>().Where(k => k.id == ppid).First();
                 int oid = BalanceHelper.CreateOrder(user, product, param, sp_billno, tfee, -1);
 
-            }, openid, tfee, body, pid, param, sp_billno);
+            }, openid, tfee, body, pid, sp_billno);
             return JsonConvert.SerializeObject(model);
 
         }
