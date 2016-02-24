@@ -4,6 +4,8 @@ using System.Xml.Linq;
 using Senparc.Weixin.MP;
 using System.Web;
 using System;
+using System.Text;
+using System.Collections.Generic;
 
 namespace wxPay.Net
 {
@@ -17,6 +19,55 @@ namespace wxPay.Net
             set { WxPayV3.TenpayV3Info = value; }
         }
 
+        public static string GetSignRequest(Dictionary<string, string> parameters)
+        {
+            IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(parameters);
+            IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
+
+            StringBuilder query = new StringBuilder();
+            while (dem.MoveNext())
+            {
+                string key = dem.Current.Key;
+                string value = dem.Current.Value;
+                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
+                {
+                    query.Append(key).Append("=").Append(value).Append("&");
+                }
+            }
+            string requstString = query.ToString();
+            if (requstString.Contains("&"))
+            {
+                requstString = requstString.Remove(requstString.Length - 1);
+            }
+
+            var sha1 = System.Security.Cryptography.SHA1.Create();
+            var sha1Arr = sha1.ComputeHash(Encoding.UTF8.GetBytes(requstString));
+            StringBuilder enText = new StringBuilder();
+            foreach (var b in sha1Arr)
+            {
+                enText.AppendFormat("{0:x2}", b);
+            }
+            return enText.ToString();
+        }
+
+        /// <summary>
+        /// 获取用户收货地址时的addrSign
+        /// </summary>
+        /// <param name="nonceStr"></param>
+        /// <param name="timeStamp"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static string GetUserAddrSign(string appid, string accesstoken, string nonceStr, string timeStamp, string url)
+        {
+            //string accesstoken = AccessTokenContainer.TryGetAccessToken(dfConfig.AppID, dfConfig.AppSecret);
+            Dictionary<string, string> paramlist = new Dictionary<string, string>();
+            paramlist.Add("appid", appid);
+            paramlist.Add("noncestr", nonceStr);
+            paramlist.Add("accesstoken", accesstoken);
+            paramlist.Add("timestamp", timeStamp);
+            paramlist.Add("url", url);
+            return GetSignRequest(paramlist);
+        }
 
         /// <summary>
         /// 签名后执行的委托方法，用于在签名成功的时机有机会处理订单操作

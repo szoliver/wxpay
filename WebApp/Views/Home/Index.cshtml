@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Senparc.Weixin.MP.TenPayLibV3
+@using Senparc.Weixin.MP.Helpers
+@using Senparc.Weixin.MP.AdvancedAPIs
+@using System.Text
+@using wxPay.Net
+@{
     ViewBag.Title = "Home Page";
     string orderid = DateTime.Now.Ticks.ToString();
     string openid = "uO-ZyMILKGWG_5ZXC6*********************";
@@ -22,7 +27,23 @@
         }, function (e) {
             alert(e);
         }
-        );
+        );        
+
+            @{
+                string AppID = "";
+                string AppSecret = "";
+                string url = Request.Url.AbsoluteUri;
+                string timestamp = JSSDKHelper.GetTimestamp();
+                string nonestr = JSSDKHelper.GetNoncestr();
+                var result = OAuthApi.GetAccessToken(AppID,AppSecret, Request.QueryString["code"]);
+                string accesstok =result.access_token;
+                string addSign = WxPayV3.GetUserAddrSign(AppID,accesstok, nonestr, timestamp, url);
+            }        
+        $("a#getaddr").SelectAddress('@AppID', '@addSign', '@timestamp', '@nonestr', function (res) {
+            //res.username 收货人 res.telNumber 收货电话 res.addressPostalCode 邮编 res.nationalCode 国家码 
+            alert($.fn.wxPay.SelectedAddr);
+        }, function (desc) { alert(desc); }, function (desc) { alert(desc); });
+
     });
 </script>
 
@@ -36,7 +57,9 @@
 <div class="row">
     <p>
         <a class="pay" href="javascript:;">微信支付测试</a>
-
+    </p>
+    <p>
+        <a href="javascript:;" id="getaddr">获取收货地址</a>
     </p>
 </div>
 <div class="row">

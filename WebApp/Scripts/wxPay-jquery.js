@@ -21,8 +21,13 @@
         if (typeof (openid) == "undefined" || openid == '')
             alert('OpenID错误');
         else {
+            if ($.fn.wxPay.WxVersion() < "5.0") {
+                alert("请升级微信客户端");
+                return;
+            }
             $(this).click(function () {
-                if (!wx_pay) { return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
+                abortpay = false;
+                if (!wx_pay && !$.fn.wxPay.Debug) { return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
                 var fee = 0;
                 if (typeof (paybefore) == "function") {
                     var rfee = paybefore();
@@ -60,5 +65,45 @@
             });
         }
     };
+    $.fn.SelectAddress = function (appid, addsign, timestamp, noncestr, success, fail, cancel) {
+        if ($.fn.wxPay.WxVersion() < "5.0") {
+            alert("请升级微信客户端");
+        } else {
+            $(this).click(function () {
+                WeixinJSBridge.invoke("editAddress",
+                        {
+                            'appId': appid,
+                            'scope': 'jsapi_address',
+                            'signType': 'sha1',
+                            'addrSign': addsign,
+                            'timeStamp': timestamp,
+                            'nonceStr': noncestr
+                        },
+                            function (res) {
+                                if (res.err_msg == "edit_address:ok") {
+                                    if (typeof (success) == "function") {
+                                        $.fn.wxPay.SelectedAddr = res.proviceFirstStageName + " " + res.addressCitySecondStageName + " " + res.addressCountiesThirdStageName + " " + res.addressDetailInfo;
+                                        success(res);
+                                    }
+                                } else
+                                    if (res.err_msg == "edit_address:fail") {
+                                        if (typeof (fail) == "function") fail(res.err_desc);
+                                    } else {
+                                        if (typeof (cancel) == "function") cancel('用户取消');
+                                    }
+                            }
+                    );
+            });
+        }
+    };
+    $.fn.wxPay.SelectedAddr = "";
     $.fn.wxPay.OrderParam = "";
+    $.fn.wxPay.Debug = false;
+    $.fn.wxPay.WxVersion = function () {
+        var weInfo = navigator.userAgent.match(/MicroMessenger\/([\d\.]+)/i);
+        if (!weInfo)
+            return 0;
+        else
+            return weInfo[1];
+    };
 })(jQuery, window);
