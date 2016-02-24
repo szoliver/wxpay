@@ -1,4 +1,4 @@
-# wxpay V1.1.2
+# wxpay V1.2.2
 微信支付-V3 JQuery插件 支持H5页面支付JSSDK<br />
 本组件是基于Senparc.Weixin.MP的应用，人家都已经封装得很好了，就没必要再封装一次，只是为了简化Senparc微信支付的开发应用，开发人员把注意力只放在业务处理上，而不必再纠结如何使用Senparc.Weixin.MP进行微信开发的问题。
 ## 开发环境支持
@@ -22,11 +22,12 @@ Install-Package wxPay.Net
   wxPay js源码在[wxPay-jquery.js](https://github.com/szoliver/wxpay/blob/master/WebApp/Scripts/wxPay-jquery.js)<br />
   wxPay.Net在此同名目录下<br />
 ## wxPay功能特色
-   1.本质上是经验积累，跳过那些坑，可以快速完成微信支付开发（H5公众号）<br />
-   2.js快速调用<br />
+   1.获取微信收货地址<br />
+   2.本质上是经验积累，跳过那些坑，可以快速完成微信支付开发（H5公众号）<br />
+   3.js快速调用<br />
    $("a.pay").wxpay(...)，前端这一行代码即可完成微信支付功能，引入wxpay.js（Jquery插件）即可。<br />
    上行代码中a.pay为点击支付的按钮Jq选择器 <br />
-   3.后台处理简便<br />
+   4.后台处理简便<br />
    支持自动签名处理（GetWXPayInfo）和回调处理（ProcessNotify），通过方法委托可以编写自己的业务代码，Demo中有详细的代码供参考。<br />
    
 ## 使用wxPay插件H5简单调用微信支付的Demo
@@ -51,6 +52,24 @@ Install-Package wxPay.Net
                 alert("支付成功success");
             }
             );
+            //取accesstoken，非组件中的var accessToken = AccessTokenContainer.TryGetAccessToken(appId, appSecret);，切记切记！！
+            //本例中进行了授权跳转，取到code才能取到OAuth2的AccessToken
+            //本视图对应的方法中进行了跳转，详见DEMO
+            @{
+                string AppID = "";
+                string AppSecret = "";
+                string url = Request.Url.AbsoluteUri;
+                string timestamp = JSSDKHelper.GetTimestamp();
+                string nonestr = JSSDKHelper.GetNoncestr();
+                var result = OAuthApi.GetAccessToken(AppID,AppSecret, Request.QueryString["code"]);
+                string accesstok =result.access_token;
+                string addSign = WxPayV3.GetUserAddrSign(AppID,accesstok, nonestr, timestamp, url);
+            }        
+        $("a#getaddr").SelectAddress('@AppID', '@addSign', '@timestamp', '@nonestr', function (res) {
+            //res.username 收货人 res.telNumber 收货电话 res.addressPostalCode 邮编 res.nationalCode 国家码 
+            alert($.fn.wxPay.SelectedAddr);
+        }, function (desc) { alert(desc); }, function (desc) { alert(desc); });
+        
         });
     </script>
 </head>
