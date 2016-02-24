@@ -67,7 +67,7 @@ Install-Package wxPay.Net
                 string addSign = WxPayV3.GetUserAddrSign(AppID,accesstok, nonestr, timestamp, url);
             }        
         $("a#getaddr").SelectAddress('@AppID', '@addSign', '@timestamp', '@nonestr', function (res) {
-            //res.username 收货人 res.telNumber 收货电话 res.addressPostalCode 邮编 res.nationalCode 国家码 
+            //其他地址数据：res.username 收货人 res.telNumber 收货电话 res.addressPostalCode 邮编 res.nationalCode 国家码 
             alert($.fn.wxPay.SelectedAddr);
         }, function (desc) { alert(desc); }, function (desc) { alert(desc); });
         
