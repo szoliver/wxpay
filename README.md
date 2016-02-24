@@ -55,6 +55,7 @@ Install-Package wxPay.Net
             //取accesstoken，非组件中的var accessToken = AccessTokenContainer.TryGetAccessToken(appId, appSecret);，切记切记！！
             //本例中进行了授权跳转，取到code才能取到OAuth2的AccessToken
             //本视图对应的方法中进行了跳转，详见DEMO
+            //或是你有其他方法取到OAuth2的accesstoken也行，取到后用WxPayV3.GetUserAddrSign签名，得到addSign才是关键
             @{
                 string AppID = "";
                 string AppSecret = "";
