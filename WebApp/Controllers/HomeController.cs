@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Senparc.Weixin.MP.AdvancedAPIs;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,8 +13,17 @@ namespace WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {            
+        public ActionResult Index(string code="")
+        {
+            //取accesstoken，非组件中的var accessToken = AccessTokenContainer.TryGetAccessToken(appId, appSecret);，切记切记！！
+            //本例中进行了授权跳转，取到code才能取到OAuth2的AccessToken
+            string appid = "";
+            string RootDomain = "";
+            if (code == "")
+            {
+                Response.Redirect(OAuthApi.GetAuthorizeUrl(appid, RootDomain + "home/index", "dfwxmall", Senparc.Weixin.MP.OAuthScope.snsapi_userinfo));
+                Response.End();
+            }
             return View();
         }
 
@@ -34,7 +44,7 @@ namespace WebApp.Controllers
                 //签名后获得的WXPayModel结果对象，此时可以写入订单
                 //如果paySign为Error，请检查package内容进行调试和查找错误
 
-            }, openid, tfee, body, pid, param, sp_billno);
+            }, openid, tfee, body, pid, sp_billno);
             return JsonConvert.SerializeObject(model);
         }
 
