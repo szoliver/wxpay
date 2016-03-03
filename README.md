@@ -77,6 +77,7 @@ Install-Package wxPay.Net
 <body>
     <div>
         <a class="pay" href="javascript:;">微信支付测试</a>
+        <a id="getaddr" href="javascript:;">选择微信收货地址</a>
     </div>
 </body>
 </html>
