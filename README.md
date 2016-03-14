@@ -43,15 +43,21 @@ Install-Package wxPay.Net
     <script>
         $(function () {
             var options = {
-                pid: 0, sp_billno: "@BalanceHelper.GenOrderId()", desc: "这是一个测试支付"
+                pid: 0, desc: "这是一个测试支付"
             };
             $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", options, function () {
                 $.fn.wxPay.OrderParam=""; //附加数据可以在/usercenter/payment中处理
+				$.fn.wxPay.OrderCode = "@BalanceHelper.GenOrderId()";
+            //支付前计算支付金额或写固定金额
+            //考虑到订单重复提交的可能性，订单可通过公共属性获取
                 return 1;
             }, function () {
                 alert("支付成功success");
-            }
-            );
+            }, function (e) {
+            //2016-03-14 用户取消支付后返回新的guid，可以作为新的订单编号使用
+            //当然也可以是其他订单号规则，请自行修改/home/payment中的payNo返回值
+            alert(e);
+			});
             //取accesstoken，非组件中的var accessToken = AccessTokenContainer.TryGetAccessToken(appId, appSecret);，切记切记！！
             //本例中进行了授权跳转，取到code才能取到OAuth2的AccessToken
             //本视图对应的方法中进行了跳转，详见DEMO
