@@ -3,7 +3,7 @@
     $.fn.wxPay = function (signurl, openid, options, paybefore, success, fail, cancel) {
         var wx_pay = false;
         var defaults = {
-            pid: "0", sp_billno: "", desc: ""
+            pid: "0", desc: ""
         };
         var settings = $.extend({}, defaults, options);
         var abortpay = false;
@@ -25,6 +25,7 @@
                 alert("请升级微信客户端");
                 return;
             }
+            if (settings.desc == "") settings.desc = "备注不能为空-wxpay.net";
             $(this).click(function () {
                 abortpay = false;
                 if (!wx_pay && !$.fn.wxPay.Debug) { return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
@@ -36,7 +37,7 @@
                         fee = rfee * 100; //转换成分
                 }
                 if (!abortpay && fee > 0) {
-                    $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: $.fn.wxPay.OrderParam, sp_billno: settings.sp_billno }, function (data) {
+                    $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: $.fn.wxPay.OrderParam, sp_billno: $.fn.wxPay.OrderCode }, function (data) {
                         if (data.paySign == "ERROR") {
                             if (typeof (fail) == "function") fail(data.package);
                         }
@@ -56,7 +57,7 @@
                                     if (res.err_msg == "get_brand_wcpay_request:fail") {
                                         if (typeof (fail) == "function") fail(res.err_desc);
                                     } else {
-                                        if (typeof (cancel) == "function") cancel(res.err_desc);
+                                        if (typeof (cancel) == "function") cancel(data.payNo);
                                     }
                             });
                         }
@@ -98,6 +99,7 @@
     };
     $.fn.wxPay.SelectedAddr = "";
     $.fn.wxPay.OrderParam = "";
+    $.fn.wxPay.OrderCode = "";
     $.fn.wxPay.Debug = false;
     $.fn.wxPay.WxVersion = function () {
         var weInfo = navigator.userAgent.match(/MicroMessenger\/([\d\.]+)/i);

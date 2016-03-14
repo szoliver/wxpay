@@ -166,7 +166,7 @@ namespace wxPay.Net
             }
             catch (Exception ex)
             {
-                return new WXPayModel() { paySign = "ERROR", package = "抛出异常:" + ex.Message };
+                return new WXPayModel() { paySign = "ERROR", package = "抛出异常:" + ex.ToString() };
             }
         }
 

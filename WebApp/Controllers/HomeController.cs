@@ -13,7 +13,7 @@ namespace WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(string code="")
+        public ActionResult Index(string code = "")
         {
             //取accesstoken，非组件中的var accessToken = AccessTokenContainer.TryGetAccessToken(appId, appSecret);，切记切记！！
             //本例中进行了授权跳转，取到code才能取到OAuth2的AccessToken
@@ -45,6 +45,7 @@ namespace WebApp.Controllers
                 //如果paySign为Error，请检查package内容进行调试和查找错误
 
             }, openid, tfee, body, pid, sp_billno);
+            model.payNo = Guid.NewGuid().ToString("N");
             return JsonConvert.SerializeObject(model);
         }
 
