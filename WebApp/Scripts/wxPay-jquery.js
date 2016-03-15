@@ -34,7 +34,12 @@
                     var rfee = paybefore();
                     if (rfee == null || typeof (rfee) == "undefined") abortpay = true; //中止支付                        
                     if (!isNaN(parseFloat(rfee)))
-                        fee = rfee * 100; //转换成分
+                        fee = fee = (function () {
+                            var m = 0, s1 = rfee.toString(), s2 = "100";
+                            try { m += s1.split(".")[1].length } catch (e) { }
+                            try { m += s2.split(".")[1].length } catch (e) { }
+                            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+                        })().toFixed(0); //转换成分
                 }
                 if (!abortpay && fee > 0) {
                     $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: $.fn.wxPay.OrderParam, sp_billno: $.fn.wxPay.OrderCode }, function (data) {
