@@ -53,7 +53,7 @@ Install-Package wxPay.Net
                 return 1;
             }, function () {
                 alert("支付成功success");
-            }, function (e) {
+            },null, function (e) {
             //2016-03-14 用户取消支付后返回新的guid，可以作为新的订单编号使用
             //当然也可以是其他订单号规则，请自行修改/home/payment中的payNo返回值
             alert(e);
@@ -121,6 +121,8 @@ NuGet程度包管理器：<br />
                 int oid = BalanceHelper.CreateOrder(user, product, param, sp_billno, tfee, -1);
 
             }, openid, tfee, body, pid, sp_billno);
+            //此处是方便回调后用户取消支付，重新生成一个码，方便重新发起支付
+            model.payNo=Guid.NewGuid().ToString("N");
             return JsonConvert.SerializeObject(model);
 
         }
@@ -133,11 +135,13 @@ $(function () {
             };
             $("a.pay").wxPay("/usercenter/payment", "oGdiZuO-ZyMILKGWG_5ZXC6rSSoE", options, function () {
                 $.fn.wxPay.OrderParam="";
+                $.fn.wxPay.OrderCode="@Guid.NewGuid().ToString("N")";
                 return 1;
             }, function () {
                 alert("支付成功success");
-            }
-            );
+            },null,function(odstr){  /用户取消
+                $.fn.wxPay.OrderCode=odstr; //更新订单号
+            });
         });
 ```
 ## [5].处理支付通知信息
