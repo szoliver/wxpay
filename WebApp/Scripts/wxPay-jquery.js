@@ -18,7 +18,7 @@
         } else { onBridgeReady(); }
 
 
-        if (typeof (openid) == "undefined" || openid == '')
+        if ($.isEmptyObject(openid))
             alert('OpenID错误');
         else {
             if ($.fn.wxPay.WxVersion() < "5.0") {
@@ -30,11 +30,11 @@
                 abortpay = false;
                 if (!wx_pay && !$.fn.wxPay.Debug) { return; } //alert("正在初始化支付控件或为非微信内置浏览器环境，请稍候再试！");
                 var fee = 0;
-                if (typeof (paybefore) == "function") {
+                if ($.isFunction(paybefore)) {
                     var rfee = paybefore();
-                    if (rfee == null || typeof (rfee) == "undefined") abortpay = true; //中止支付                        
+                    if ($.isEmptyObject(rfee) || !$.isNumeric(rfee)) abortpay = true; //中止支付                        
                     if (!isNaN(parseFloat(rfee)))
-                        fee = fee = (function () {
+                        fee = (function () {
                             var m = 0, s1 = rfee.toString(), s2 = "100";
                             try { m += s1.split(".")[1].length } catch (e) { }
                             try { m += s2.split(".")[1].length } catch (e) { }
@@ -44,7 +44,7 @@
                 if (!abortpay && fee > 0) {
                     $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: $.fn.wxPay.OrderParam, sp_billno: $.fn.wxPay.OrderCode }, function (data) {
                         if (data.paySign == "ERROR") {
-                            if (typeof (fail) == "function") fail(data.package);
+                            if ($.isFunction(fail)) fail(data.package);
                         }
                         else {
                             WeixinJSBridge.invoke(
@@ -57,12 +57,12 @@
                                 "paySign": data.paySign //微信签名
                             }, function (res) {
                                 if (res.err_msg == "get_brand_wcpay_request:ok") {
-                                    if (typeof (success) == "function") success();
+                                    if ($.isFunction(success)) success();
                                 } else
                                     if (res.err_msg == "get_brand_wcpay_request:fail") {
-                                        if (typeof (fail) == "function") fail(res.err_desc);
+                                        if ($.isFunction(fail)) fail(res.err_desc);
                                     } else {
-                                        if (typeof (cancel) == "function") cancel(data.payNo);
+                                        if ($.isFunction(cancel)) cancel(data.payNo);
                                     }
                             });
                         }
@@ -87,15 +87,15 @@
                         },
                             function (res) {
                                 if (res.err_msg == "edit_address:ok") {
-                                    if (typeof (success) == "function") {
+                                    if ($.isFunction(success)) {
                                         $.fn.wxPay.SelectedAddr = res.proviceFirstStageName + " " + res.addressCitySecondStageName + " " + res.addressCountiesThirdStageName + " " + res.addressDetailInfo;
                                         success(res);
                                     }
                                 } else
                                     if (res.err_msg == "edit_address:fail") {
-                                        if (typeof (fail) == "function") fail(res.err_desc);
+                                        if ($.isFunction(fail)) fail(res.err_desc);
                                     } else {
-                                        if (typeof (cancel) == "function") cancel('用户取消');
+                                        if ($.isFunction(cancel)) cancel('用户取消');
                                     }
                             }
                     );
