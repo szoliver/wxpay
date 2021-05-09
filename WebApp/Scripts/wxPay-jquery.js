@@ -1,5 +1,21 @@
 ; (function ($, window) {
     'use strict';
+    var compare=function(curV,reqV){
+        if(curV && reqV){
+           var arr1 = curV.split('.'),
+               arr2 = reqV.split('.');
+           var minLength=Math.min(arr1.length,arr2.length),
+               position=0,
+               diff=0;
+           while(position<minLength && ((diff=parseInt(arr1[position])-parseInt(arr2[position]))==0)){
+               position++;
+           }
+           diff=(diff!=0)?diff:(arr1.length-arr2.length);
+           return diff>0;
+        }else{
+           return false;
+        }
+    };
     $.fn.wxPay = function (signurl, openid, options, paybefore, success, fail, cancel) {
         var wx_pay = false;
         var defaults = {
@@ -20,23 +36,7 @@
             try { m += s1.split(".")[1].length } catch (e) { }
             try { m += s2.split(".")[1].length } catch (e) { }
             return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
-        };
-        var compare=function(curV,reqV){
-            if(curV && reqV){
-               var arr1 = curV.split('.'),
-                   arr2 = reqV.split('.');
-               var minLength=Math.min(arr1.length,arr2.length),
-                   position=0,
-                   diff=0;
-               while(position<minLength && ((diff=parseInt(arr1[position])-parseInt(arr2[position]))==0)){
-                   position++;
-               }
-               diff=(diff!=0)?diff:(arr1.length-arr2.length);
-               return diff>0;
-            }else{
-               return false;
-            }
-        };
+        };        
         if ($.isEmptyObject(openid)&&!$.fn.wxPay.Debug){
             $(this).click(function(){
                 alert('用户信息错误，无法调用微信支付');
@@ -103,8 +103,8 @@
         }
     };
     $.fn.SelectAddress = function (appid, addsign, timestamp, noncestr, success, fail, cancel) {
-        if ($.fn.wxPay.WxVersion() < 5) {
-            alert("请使用或升级微信客户端");
+        if (!compare(ver,"8.0.3")&&!$.fn.wxPay.Debug) {
+            alert("请安装并升级微信APP，版本>=8.0.3，当前："+(ver=="0"?"非微信浏览器":ver));
         } else {
             $(this).click(function () {
                 WeixinJSBridge.invoke("editAddress",
