@@ -1,1 +1,2 @@
-//
+//Ubuntu 20.04.2 LTS + vscode + dotnet core 3.1 + Senparc.Weixin v6.9.100 + Senparc.Weixin.MP v16.12.100 + ......
+//Create by 2021-05-05
