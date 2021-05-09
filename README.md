@@ -1,3 +1,5 @@
+# wxpay V1.4(2021-5-9更新)
+
 # wxpay V1.2.7(2016-3-15更新)
 微信支付-V3 JQuery插件 支持H5页面支付JSSDK<br />
 本组件是基于Senparc.Weixin.MP的应用，人家都已经封装得很好了，就没必要再封装一次，只是为了简化Senparc微信支付的开发应用，开发人员把注意力只放在业务处理上，而不必再纠结如何使用Senparc.Weixin.MP进行微信开发的问题。
@@ -93,7 +95,7 @@ Install-Package wxPay.Net
 ```html
 <script src="~/Content/js/wxPay-jquery.js"></script>
 ```
-## [2].NuGet安装wxPay.Net组件并引用
+## [2].NuGet安装wxPay.Net组件并引用[废弃，未更新，请下载源码修改]
 NuGut控制台：<br /> PM> Install-Package wxPay.Net
  或
 NuGet程度包管理器：<br />
