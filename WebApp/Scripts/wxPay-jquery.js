@@ -76,7 +76,7 @@
                                 var orderstr="";
                                 $.post(signurl, { openid: openid, tfee: fee, body: settings.desc, pid: settings.pid, param: $.fn.wxPay.OrderParam, sp_billno: $.fn.wxPay.OrderCode }, function (data) {
                                     if (data.paySign == "ERROR") {
-                                        if (typeof fail === "function") fail(data.package);
+                                        if (typeof fail === "function") $(document).trigger('fail', res.err_desc);
                                     }
                                     else {
                                         feeamt=data.payFee/100;
